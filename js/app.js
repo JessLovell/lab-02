@@ -9,6 +9,7 @@ function ImageConstructor(imageObject){
 }
 
 ImageConstructor.allImages = [];
+ImageConstructor.allKeywords = [];
 
 ImageConstructor.prototype.render = function(){
   $('main').append('<section class = "clone"></section');
@@ -24,7 +25,6 @@ ImageConstructor.prototype.render = function(){
   $imageClone.addClass(this.title);
 }
 
-
 ImageConstructor.readJson = () => {
   $.get('data/page-1.json', 'json')
     .then(data => {
@@ -33,10 +33,41 @@ ImageConstructor.readJson = () => {
       })
     })
     .then( ImageConstructor.loadImages)
+    .then(keywordExtractor)
+    .then(populateDropDownMenu)
 }
-
 ImageConstructor.loadImages = () => {
   ImageConstructor.allImages.forEach(image => image.render());
 }
 
 $(() => ImageConstructor.readJson());
+
+
+const keywordExtractor = () => {
+  ImageConstructor.allImages.forEach(element => {
+    console.log(element.keyword);
+    if(ImageConstructor.allKeywords.indexOf(element.keyword) === -1){
+      ImageConstructor.allKeywords.push(element.keyword);
+    }
+  })
+}
+
+const populateDropDownMenu = () => {
+  ImageConstructor.allKeywords.forEach(element =>{
+    $('select').append(`<option value="${element}">${element}</option>`);
+  })
+}
+
+$('select').on('change', 'value', () =>{
+  console.log('anything');
+  let $input = $('select').val();
+  let imageClass = `.${$input}`;
+  if($input === imageClass){
+    $(`${imageClass}`).show();
+  }else{
+    $(`${imageClass}`).hide();
+  }
+})
+
+
+console.log(ImageConstructor.allKeywords);
