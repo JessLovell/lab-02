@@ -22,7 +22,7 @@ ImageConstructor.prototype.render = function(){
   $imageClone.find('img').attr('src', this.imageUrl);
   $imageClone.find('p').text(this.description);
   $imageClone.removeClass('clone');
-  $imageClone.addClass(this.title);
+  $imageClone.addClass(this.keyword);
 }
 
 ImageConstructor.readJson = () => {
@@ -58,16 +58,24 @@ const populateDropDownMenu = () => {
   })
 }
 
-$('select').on('change', 'value', () =>{
+$('select').on('change', () =>{
   console.log('anything');
   let $input = $('select').val();
-  let imageClass = `.${$input}`;
-  if($input === imageClass){
-    $(`${imageClass}`).show();
-  }else{
-    $(`${imageClass}`).hide();
+  console.log($input);
+  let imageClass = `${$input}`;
+  console.log(imageClass);
+  ImageConstructor.allKeywords.forEach((element) =>{
+    if($input === element){
+      $(`.${element}`).show();
+      console.log('if shows');
+    }else{
+      $(`.${element}`).hide();
+      console.log('if hides');
+    }
+    console.log('all the way through');
   }
-})
+  )
 
+})
 
 console.log(ImageConstructor.allKeywords);
