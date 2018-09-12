@@ -34,6 +34,7 @@ ImageConstructor.readJson = () => {
     })
     .then( ImageConstructor.loadImages)
     .then(keywordExtractor)
+    .then(populateDropDownMenu)
 }
 ImageConstructor.loadImages = () => {
   ImageConstructor.allImages.forEach(image => image.render());
@@ -48,9 +49,13 @@ const keywordExtractor = () => {
     if(ImageConstructor.allKeywords.indexOf(element.keyword) === -1){
       ImageConstructor.allKeywords.push(element.keyword);
     }
-
   })
 }
 
+const populateDropDownMenu = () => {
+  ImageConstructor.allKeywords.forEach(element =>{
+    $('select').append(`<option value="${element}">${element}</option>`);
+  })
+}
 
 console.log(ImageConstructor.allKeywords);
