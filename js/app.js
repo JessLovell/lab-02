@@ -9,6 +9,7 @@ function ImageConstructor(imageObject){
 }
 
 ImageConstructor.allImages = [];
+ImageConstructor.allKeywords = ['all'];
 
 ImageConstructor.prototype.render = function(){
   $('main').append('<section class = "clone"></section');
@@ -24,7 +25,6 @@ ImageConstructor.prototype.render = function(){
   $imageClone.addClass(this.title);
 }
 
-
 ImageConstructor.readJson = () => {
   $.get('data/page-1.json', 'json')
     .then(data => {
@@ -33,10 +33,24 @@ ImageConstructor.readJson = () => {
       })
     })
     .then( ImageConstructor.loadImages)
+    .then(keywordExtractor)
 }
-
 ImageConstructor.loadImages = () => {
   ImageConstructor.allImages.forEach(image => image.render());
 }
 
 $(() => ImageConstructor.readJson());
+
+
+const keywordExtractor = () => {
+  ImageConstructor.allImages.forEach(element => {
+    console.log(element.keyword);
+    if(ImageConstructor.allKeywords.indexOf(element.keyword) === -1){
+      ImageConstructor.allKeywords.push(element.keyword);
+    }
+
+  })
+}
+
+
+console.log(ImageConstructor.allKeywords);
