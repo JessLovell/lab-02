@@ -9,7 +9,7 @@ function ImageConstructor(imageObject){
 }
 
 ImageConstructor.allImages = [];
-ImageConstructor.allKeywords = ['all'];
+ImageConstructor.allKeywords = [];
 
 ImageConstructor.prototype.render = function(){
   $('main').append('<section class = "clone"></section');
@@ -57,5 +57,17 @@ const populateDropDownMenu = () => {
     $('select').append(`<option value="${element}">${element}</option>`);
   })
 }
+
+$('select').on('change', 'value', () =>{
+  console.log('anything');
+  let $input = $('select').val();
+  let imageClass = `.${$input}`;
+  if($input === imageClass){
+    $(`${imageClass}`).show();
+  }else{
+    $(`${imageClass}`).hide();
+  }
+})
+
 
 console.log(ImageConstructor.allKeywords);
