@@ -12,17 +12,10 @@ ImageConstructor.allImages = [];
 ImageConstructor.allKeywords = [];
 
 ImageConstructor.prototype.render = function(){
-  $('main').append('<section class = "clone"></section');
-  const $imageClone = $('section[class = "clone"]');
-  const $imageHtml = $('#photo-template').html();
 
-  $imageClone.html($imageHtml);
-
-  $imageClone.find('h2').text(this.title);
-  $imageClone.find('img').attr('src', this.imageUrl);
-  $imageClone.find('p').text(this.description);
-  $imageClone.removeClass('clone');
-  $imageClone.addClass(this.keyword);
+  const $template = $('#photo-template').html();
+  const source = Handlebars.compile($template);
+  return source(this);
 }
 
 ImageConstructor.readJson = () => {
@@ -37,7 +30,7 @@ ImageConstructor.readJson = () => {
     .then(populateDropDownMenu)
 }
 ImageConstructor.loadImages = () => {
-  ImageConstructor.allImages.forEach(image => image.render());
+  ImageConstructor.allImages.forEach(image => $('#photo').append(image.render()));
 }
 
 $(() => ImageConstructor.readJson());
@@ -49,6 +42,7 @@ const keywordExtractor = () => {
     if(ImageConstructor.allKeywords.indexOf(element.keyword) === -1){
       ImageConstructor.allKeywords.push(element.keyword);
     }
+    ImageConstructor.allKeywords.sort();
   })
 }
 
@@ -59,23 +53,16 @@ const populateDropDownMenu = () => {
 }
 
 $('select').on('change', () =>{
-  console.log('anything');
   let $input = $('select').val();
-  console.log($input);
-  let imageClass = `${$input}`;
-  console.log(imageClass);
   ImageConstructor.allKeywords.forEach((element) =>{
     if($input === element){
       $(`.${element}`).show();
-      console.log('if shows');
     }else{
       $(`.${element}`).hide();
-      console.log('if hides');
     }
-    console.log('all the way through');
   }
   )
 
 })
 
-console.log(ImageConstructor.allKeywords);
+
