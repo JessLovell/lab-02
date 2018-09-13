@@ -12,21 +12,14 @@ ImageConstructor.allImages = [];
 ImageConstructor.allKeywords = [];
 
 ImageConstructor.prototype.render = function(){
-  $('main').append('<section class = "clone"></section');
-  const $imageClone = $('section[class = "clone"]');
-  const $imageHtml = $('#photo-template').html();
 
-  $imageClone.html($imageHtml);
-
-  $imageClone.find('h2').text(this.title);
-  $imageClone.find('img').attr('src', this.imageUrl);
-  $imageClone.find('p').text(this.description);
-  $imageClone.removeClass('clone');
-  $imageClone.addClass(this.keyword);
+  const $template = $('#photo-template').html();
+  const source = Handlebars.compile($template);
+  return source(this);
 }
 
-ImageConstructor.readJson = () => {
-  $.get('data/page-1.json', 'json')
+ImageConstructor.readJson = (file) => {
+  $.get(file, 'json')
     .then(data => {
       data.forEach(image => {
         ImageConstructor.allImages.push( new ImageConstructor(image));
@@ -37,10 +30,10 @@ ImageConstructor.readJson = () => {
     .then(populateDropDownMenu)
 }
 ImageConstructor.loadImages = () => {
-  ImageConstructor.allImages.forEach(image => image.render());
+  ImageConstructor.allImages.forEach(image => $('#photo').append(image.render()));
 }
 
-$(() => ImageConstructor.readJson());
+$(() => ImageConstructor.readJson('data/page-1.json'));
 
 
 const keywordExtractor = () => {
@@ -49,6 +42,7 @@ const keywordExtractor = () => {
     if(ImageConstructor.allKeywords.indexOf(element.keyword) === -1){
       ImageConstructor.allKeywords.push(element.keyword);
     }
+    ImageConstructor.allKeywords.sort();
   })
 }
 
@@ -59,23 +53,37 @@ const populateDropDownMenu = () => {
 }
 
 $('select').on('change', () =>{
-  console.log('anything');
   let $input = $('select').val();
-  console.log($input);
-  let imageClass = `${$input}`;
-  console.log(imageClass);
   ImageConstructor.allKeywords.forEach((element) =>{
     if($input === element){
       $(`.${element}`).show();
-      console.log('if shows');
+    }else if($input === 'default'){
+      ImageConstructor.allKeywords.forEach((element) => {
+        $(`.${element}`).show();
+      })
     }else{
       $(`.${element}`).hide();
-      console.log('if hides');
     }
-    console.log('all the way through');
   }
   )
 
 })
+$('#page-buttons').on('click', (event) =>{
+  let $pageMatch = $(event.target).attr('id');
+  if($pageMatch === 'page-2'){
 
-console.log(ImageConstructor.allKeywords);
+    $('#photo').html('');
+    $('select').html('');
+    ImageConstructor.allImages = [];
+    ImageConstructor.allKeywords = [];
+    ImageConstructor.readJson('data/page-2.json');
+  }else{
+    $('#photo').html('');
+    $('select').html('');
+    ImageConstructor.allImages = [];
+    ImageConstructor.allKeywords = [];
+    ImageConstructor.readJson('data/page-1.json');
+  }
+
+})
+
