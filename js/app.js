@@ -18,8 +18,8 @@ ImageConstructor.prototype.render = function(){
   return source(this);
 }
 
-ImageConstructor.readJson = () => {
-  $.get('data/page-1.json', 'json')
+ImageConstructor.readJson = (file) => {
+  $.get(file, 'json')
     .then(data => {
       data.forEach(image => {
         ImageConstructor.allImages.push( new ImageConstructor(image));
@@ -33,7 +33,7 @@ ImageConstructor.loadImages = () => {
   ImageConstructor.allImages.forEach(image => $('#photo').append(image.render()));
 }
 
-$(() => ImageConstructor.readJson());
+$(() => ImageConstructor.readJson('data/page-1.json'));
 
 
 const keywordExtractor = () => {
@@ -57,6 +57,10 @@ $('select').on('change', () =>{
   ImageConstructor.allKeywords.forEach((element) =>{
     if($input === element){
       $(`.${element}`).show();
+    }else if($input === 'default'){
+      ImageConstructor.allKeywords.forEach((element) => {
+        $(`.${element}`).show();
+      })
     }else{
       $(`.${element}`).hide();
     }
@@ -64,5 +68,22 @@ $('select').on('change', () =>{
   )
 
 })
+$('#page-buttons').on('click', (event) =>{
+  let $pageMatch = $(event.target).attr('id');
+  if($pageMatch === 'page-2'){
 
+    $('#photo').html('');
+    $('select').html('');
+    ImageConstructor.allImages = [];
+    ImageConstructor.allKeywords = [];
+    ImageConstructor.readJson('data/page-2.json');
+  }else{
+    $('#photo').html('');
+    $('select').html('');
+    ImageConstructor.allImages = [];
+    ImageConstructor.allKeywords = [];
+    ImageConstructor.readJson('data/page-1.json');
+  }
+
+})
 
