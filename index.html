@@ -3,11 +3,14 @@
   <head>
     <title>The Gallery of Horns</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Marvel" rel="stylesheet">
     <link rel= "stylesheet" href="css/reset.css">
-    <link rel= "stylesheet" href="css/styles.css">
+    <link rel= "stylesheet" href="css/base.css">
+    <link rel= "stylesheet" href="css/layout.css">
+    <link rel= "stylesheet" href="css/modules.css">
     
     <script id="photo-template" type="text/x-handlebars-template">
-      <div class = "{{keyword}}">
+      <div class = "container {{keyword}}">
         <h2>{{title}}</h2>
         <img src="{{ imageUrl }}" alt="">
         <p>{{description}}</p>
